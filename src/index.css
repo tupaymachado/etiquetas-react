@@ -37,6 +37,7 @@ h1 {
 /* selecionar apenas o botão do input type='file' */
 
 button, input[type="file"]::-webkit-file-upload-button {
+  margin: 5px;
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -47,11 +48,11 @@ button, input[type="file"]::-webkit-file-upload-button {
   transition: border-color 0.25s;
 }
 
-input[type="file"]::-webkit-file-upload-button:hover {
+button:hover, input[type="file"]::-webkit-file-upload-button:hover {
   border-color: #646cff;
 }
 
-input[type="file"]::-webkit-file-upload-button:focus,
+button:focus, button:focus-visible, input[type="file"]::-webkit-file-upload-button:focus,
 input[type="file"]::-webkit-file-upload-button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }

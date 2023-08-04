@@ -18,11 +18,10 @@ export const FileUpload = () => {
     )
 }
 
-export const FunctionsButtons = () => { //fazer returnar apenas 1 botão, que vai ser editado conforme cada caso no App.jsx
+export const FunctionButton = ({ onClick, children}) => {
     return (
-        <div className='functions'>
-            <button className='btn' onClick=''>Gerar etiquetas</button>
-            <button className='btn'>Limpar</button>
-        </div>
+        <button onClick={onClick}>
+            {children}
+        </button>
     )
 }
