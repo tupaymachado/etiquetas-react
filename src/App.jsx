@@ -22,7 +22,7 @@ function App() {
     <>
       <Logo />
 
-      <FileUpload />
+      {/* <FileUpload /> */}
 
       <div>
         <input type="file" onChange={HandleFileUpload} />
