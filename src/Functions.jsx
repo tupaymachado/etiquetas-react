@@ -67,7 +67,7 @@ export function intersec(jsonData) {
         for (let j = 0; j < showroom.length; j++) {
             if (jsonData[i]['Cód. Produto'] === showroom[j].CODIGO) {
                 let obj = { ...showroom[j] };
-                obj['PRECO'] = jsonData[i]['Preço Varejo'];
+                obj['PRECO VAREJO'] = jsonData[i]['Preço Varejo'];
                 if (jsonData[i].Status === 'PRORROGADO PROMO' || jsonData[i].Status === 'EM PROMO') {
                     obj['STATUS'] = true;
                 } else {
@@ -82,7 +82,52 @@ export function intersec(jsonData) {
 }
 
 export function trocaPrecos() {
+    let trocaPrecos = [];
     for (let i = 0; i < window.intersec.length; i++) {
-        if (window.intersec[i].PRECO !== window.intersec[i]['ULTIMO PRECO']
+        if (Math.abs(window.intersec[i]['PRECO VAREJO'] - window.intersec[i]['ULTIMO PRECO']) < 0.1 || window.intersec[i]['PRECO VAREJO'] === 0) {
+            continue;            
+        } else {
+            trocaPrecos.push(window.intersec[i]);
+        }
     }
+    montarTabela(trocaPrecos);
+}
+
+export function montarTabela(trocaPrecos) {
+    let tabela = document.getElementById('tabela');
+    tabela.innerHTML = '';
+    let thead = document.createElement('thead');
+    let tr = document.createElement('tr');
+    let th = document.createElement('th');
+    th.innerText = 'Código';
+    tr.appendChild(th);
+    th = document.createElement('th');
+    th.innerText = 'Descrição';
+    tr.appendChild(th);
+    th = document.createElement('th');
+    th.innerText = 'Preço Varejo';
+    tr.appendChild(th);
+    th = document.createElement('th');
+    th.innerText = 'Último Preço';
+    tr.appendChild(th);
+    thead.appendChild(tr);
+    tabela.appendChild(thead);
+    let tbody = document.createElement('tbody');
+    for (let i = 0; i < trocaPrecos.length; i++) {
+        tr = document.createElement('tr');
+        let td = document.createElement('td');
+        td.innerText = trocaPrecos[i].CODIGO;
+        tr.appendChild(td);
+        td = document.createElement('td');
+        td.innerText = trocaPrecos[i].DESCRICAO;
+        tr.appendChild(td);
+        td = document.createElement('td');
+        td.innerText = trocaPrecos[i]['PRECO VAREJO'];
+        tr.appendChild(td);
+        td = document.createElement('td');
+        td.innerText = trocaPrecos[i]['ULTIMO PRECO'];
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+    }
+    tabela.appendChild(tbody);
 }
