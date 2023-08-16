@@ -82,52 +82,43 @@ export function intersec(jsonData) {
 }
 
 export function trocaPrecos() {
-    let trocaPrecos = [];
+    let novosPrecos = [];
     for (let i = 0; i < window.intersec.length; i++) {
-        if (Math.abs(window.intersec[i]['PRECO VAREJO'] - window.intersec[i]['ULTIMO PRECO']) < 0.1 || window.intersec[i]['PRECO VAREJO'] === 0) {
-            continue;            
-        } else {
-            trocaPrecos.push(window.intersec[i]);
-        }
+      if (
+        Math.abs(window.intersec[i]['PRECO VAREJO'] - window.intersec[i]['ULTIMO PRECO']) < 0.1 ||
+        window.intersec[i]['PRECO VAREJO'] === 0
+      ) {
+        continue;
+      } else {
+        novosPrecos.push(window.intersec[i]);
+      }
     }
-    montarTabela(trocaPrecos);
-}
-
-export function montarTabela(trocaPrecos) {
-    let tabela = document.getElementById('tabela');
-    tabela.innerHTML = '';
-    let thead = document.createElement('thead');
-    let tr = document.createElement('tr');
-    let th = document.createElement('th');
-    th.innerText = 'Código';
-    tr.appendChild(th);
-    th = document.createElement('th');
-    th.innerText = 'Descrição';
-    tr.appendChild(th);
-    th = document.createElement('th');
-    th.innerText = 'Preço Varejo';
-    tr.appendChild(th);
-    th = document.createElement('th');
-    th.innerText = 'Último Preço';
-    tr.appendChild(th);
-    thead.appendChild(tr);
-    tabela.appendChild(thead);
-    let tbody = document.createElement('tbody');
-    for (let i = 0; i < trocaPrecos.length; i++) {
-        tr = document.createElement('tr');
-        let td = document.createElement('td');
-        td.innerText = trocaPrecos[i].CODIGO;
-        tr.appendChild(td);
-        td = document.createElement('td');
-        td.innerText = trocaPrecos[i].DESCRICAO;
-        tr.appendChild(td);
-        td = document.createElement('td');
-        td.innerText = trocaPrecos[i]['PRECO VAREJO'];
-        tr.appendChild(td);
-        td = document.createElement('td');
-        td.innerText = trocaPrecos[i]['ULTIMO PRECO'];
-        tr.appendChild(td);
-        tbody.appendChild(tr);
-    }
-    tabela.appendChild(tbody);
-}
+    window.trocaPrecos = novosPrecos;
+    // Renderize o componente TabelaPrecos em algum lugar apropriado
+  }
+  
+  export function TabelaPrecos({ trocaPrecos }) {
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Preço Varejo</th>
+            <th>Último Preço</th>
+          </tr>
+        </thead>
+        <tbody>
+          {trocaPrecos.map((item) => (
+            <tr key={item.CODIGO}>
+              <td>{item.CODIGO}</td>
+              <td>{item.DESCRICAO}</td>
+              <td>{item['PRECO VAREJO']}</td>
+              <td>{item['ULTIMO PRECO']}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+  
