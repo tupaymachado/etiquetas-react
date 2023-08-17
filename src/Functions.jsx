@@ -22,8 +22,8 @@ export async function fetchData() {
         const snapshot = await get(dbRef);
         if (snapshot.exists()) {
             const data = snapshot.val();
-            window.showroom = data;
-            console.log('Dados carregados com sucesso')
+            console.log('Dados carregados com sucesso');
+            return data;
         } else {
             console.log("No data available");
         }
@@ -33,7 +33,6 @@ export async function fetchData() {
 }
 
 export function HandleFileUpload(event) {
-    console.log('HandleFileUpload chamado')
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (evt) => {
@@ -53,72 +52,48 @@ export function HandleFileUpload(event) {
             });
             return obj;
         }).filter(item => item);
-        console.log(jsonData)
-        intersec(jsonData)
+        console.log(jsonData);
+        // return jsonData;
     };
     reader.readAsBinaryString(file);
 }
 
-export function intersec(jsonData) {
-    console.log('intersec chamado')
-    let intersec = [];
-    let showroom = window.showroom;
-    for (let i = 0; i < jsonData.length; i++) {
-        for (let j = 0; j < showroom.length; j++) {
-            if (jsonData[i]['Cód. Produto'] === showroom[j].CODIGO) {
-                let obj = { ...showroom[j] };
-                obj['PRECO VAREJO'] = jsonData[i]['Preço Varejo'];
-                if (jsonData[i].Status === 'PRORROGADO PROMO' || jsonData[i].Status === 'EM PROMO') {
-                    obj['STATUS'] = true;
-                } else {
-                    obj['STATUS'] = false;
-                }
-                intersec.push(obj);
-            }
+export function trocaPrecos(data) {
+    let novosPrecos = [];
+    for (let i = 0; i < data.length; i++) {
+        if (
+            Math.abs(data[i]['PRECO VAREJO'] - data[i]['ULTIMO PRECO']) < 0.1 ||
+            data[i]['PRECO VAREJO'] === 0
+        ) {
+            continue;
+        } else {
+            novosPrecos.push(data[i]);
         }
     }
-    console.log(intersec)
-    window.intersec = intersec;
+    return novosPrecos;
 }
 
-export function trocaPrecos() {
-    let novosPrecos = [];
-    for (let i = 0; i < window.intersec.length; i++) {
-      if (
-        Math.abs(window.intersec[i]['PRECO VAREJO'] - window.intersec[i]['ULTIMO PRECO']) < 0.1 ||
-        window.intersec[i]['PRECO VAREJO'] === 0
-      ) {
-        continue;
-      } else {
-        novosPrecos.push(window.intersec[i]);
-      }
-    }
-    window.trocaPrecos = novosPrecos;
-    // Renderize o componente TabelaPrecos em algum lugar apropriado
-  }
-  
-  export function TabelaPrecos({ trocaPrecos }) {
+export function TabelaPrecos({ trocaPrecos }) {
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Descrição</th>
-            <th>Preço Varejo</th>
-            <th>Último Preço</th>
-          </tr>
-        </thead>
-        <tbody>
-          {trocaPrecos.map((item) => (
-            <tr key={item.CODIGO}>
-              <td>{item.CODIGO}</td>
-              <td>{item.DESCRICAO}</td>
-              <td>{item['PRECO VAREJO']}</td>
-              <td>{item['ULTIMO PRECO']}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descrição</th>
+                    <th>Preço Varejo</th>
+                    <th>Último Preço</th>
+                </tr>
+            </thead>
+            <tbody>
+                {trocaPrecos.map((item) => (
+                    <tr key={item.CODIGO}>
+                        <td>{item.CODIGO}</td>
+                        <td>{item.DESCRICAO}</td>
+                        <td>{item['PRECO VAREJO']}</td>
+                        <td>{item['ULTIMO PRECO']}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     );
-  }
-  
+}
