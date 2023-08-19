@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './App.css'
 import { Logo, FileUpload, FunctionButton } from './Components.jsx'
-import { TabelaPrecos, fetchData, trocaPrecos } from './Functions.jsx'
+import { fetchData, trocaPrecos } from './Functions.jsx'
 
 
 function App() {
   const [database, setDatabase] = useState([]); // Adicionamos um estado para armazenar os dados do database
+  const [relatorio, setRelatorio] = useState([]); // Vai guardar os dados do relatório que vai ser feito o upload
   const [intersec, setIntersec] = useState([]); // Vai guardar os dados da intersecção, que vai ser criada quando ocorrer o upload do relatório
 
   useEffect(() => {
@@ -16,7 +17,7 @@ function App() {
 
   const handleTrocaPrecos = () => {
     const novosPrecos = trocaPrecos(database); // Chamamos trocaPrecos com os dados atuais
-    setData(novosPrecos); // Atualizamos o estado com os novos preços
+    setDatabase(novosPrecos); // Atualizamos o estado com os novos preços
   }
 
   return (
